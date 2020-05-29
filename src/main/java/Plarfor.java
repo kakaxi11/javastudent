@@ -29,41 +29,53 @@ public class Plarfor {
             System.out.println(conn);
             System.out.println("建立连接耗时： " + (end - start) + "ms 毫秒");
 
+//            sql语句不要使用这种拼接形式，恶意sql，使用prepareStatement就可以解决恶意sql的问题
+//            String sql = "select * from tb_name where name= '"+varname+"' and passwd='"+varpasswd+"'";
+
+
 
 //            插入
-            //对数据库的操作主要由下面这条sql决定
-//            String sql = "insert into student(id,name,age) values(?,?,?)";
+//            对数据库的操作主要由下面这条sql决定
+            String sql = "insert into student(id,name,age) values(?,?,?)";
+            ps = conn.prepareStatement(sql);
+            // 第二个，必须调用PreparedStatement的setX()系列方法，对指定的占位符设置实际的值
+            ps.setInt(1, 4);
+            ps.setString(2, "ximeileiz");
+            ps.setInt(3, 20);
+            // Statement.executeUpdate()方法，就可以用来执行insert、update、delete语句
+            // 返回类型是个int值，也就是SQL语句影响的行数
+            // 第三个，执行SQL语句时，直接使用executeUpdate()即可，不用传入任何参数
+            int rtn = ps.executeUpdate();
+
+            System.out.println("SQL语句影响了【" + rtn + "】行。");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                // 最后一定要记得在finally代码块中，尽快在执行完SQL语句之后，就释放数据库连接
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+
+//删除
+//    String sql = "delete from student where id=?";
 //            ps = conn.prepareStatement(sql);
-//            // 第二个，必须调用PreparedStatement的setX()系列方法，对指定的占位符设置实际的值
-//            ps.setInt(1, 4);
-//            ps.setString(2, "ximeileiz");
-//            ps.setInt(3, 20);
-//            // Statement.executeUpdate()方法，就可以用来执行insert、update、delete语句
-//            // 返回类型是个int值，也就是SQL语句影响的行数
-//            // 第三个，执行SQL语句时，直接使用executeUpdate()即可，不用传入任何参数
-//            int rtn = ps.executeUpdate();
-//
-//            System.out.println("SQL语句影响了【" + rtn + "】行。");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                // 最后一定要记得在finally代码块中，尽快在执行完SQL语句之后，就释放数据库连接
-//                if (ps != null) {
-//                    ps.close();
-//                }
-//                if (conn != null) {
-//                    conn.close();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-//}
-//
-
-
+//                 //注意这里要用setObject因为上面是where查询。
+//                    ps.setObject(1, 2);
+//                    // Statement.executeUpdate()方法，就可以用来执行insert、update、delete语句
+//                    // 返回类型是个int值，也就是SQL语句影响的行数
+//                    // 第三个，执行SQL语句时，直接使用executeUpdate()即可，不用传入任何参数
+//                    int rtn = ps.executeUpdate();
 
 
 
@@ -80,46 +92,46 @@ public class Plarfor {
 
 
             // 创建Statement对象
-            stmt = conn.createStatement();
-            // 执行SQL语句
-            rs = stmt.executeQuery("select * from student");
-            System.out.println("id\tname\tage\tsex");
-            while (rs.next()) {
-                System.out.println(rs.getInt(1) + "\t" + rs.getString(2)
-                        + "\t" + rs.getInt(3) + "\t" + rs.getInt(4));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-//                    因为JDBC连接是一种昂贵的资源，所以使用后要及时释放。
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-}
-
-
+//            stmt = conn.createStatement();
+//            // 执行SQL语句
+//            rs = stmt.executeQuery("select * from student");
+//            System.out.println("id\tname\tage\tsex");
+//            while (rs.next()) {
+//                System.out.println(rs.getInt(1) + "\t" + rs.getString(2)
+//                        + "\t" + rs.getInt(3) + "\t" + rs.getInt(4));
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if (rs != null) {
+//                    rs.close();
+////                    因为JDBC连接是一种昂贵的资源，所以使用后要及时释放。
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//
+//            try {
+//                if (stmt != null) {
+//                    stmt.close();
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//            try {
+//                if (conn != null) {
+//                    conn.close();
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//    }
+//}
+//
+//
